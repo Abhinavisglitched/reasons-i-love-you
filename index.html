@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reasons I Love You ❤️</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+  padding:24px; overflow-x:hidden;
+  font-family:Arial,Helvetica,sans-serif;
+  background:radial-gradient(circle at top,#ffe4f0 0,#ffd0e3 35%,#fff5f9 100%);
+  color:#831843;
+}
+.bg-heart{position:fixed;opacity:.18;font-size:28px;animation:float 7s linear infinite;pointer-events:none}
+.h1{font-size:clamp(2.1rem,8vw,4rem);margin:8px 0 12px;font-weight:900}
+.app{width:min(680px,100%);text-align:center;position:relative}
+.subtitle{letter-spacing:2px;text-transform:uppercase;font-size:.75rem;font-weight:800;color:#db2777}
+.card{
+  background:rgba(255,255,255,.9);border:1px solid #f9a8d4;border-radius:30px;
+  padding:34px 24px;box-shadow:0 20px 60px rgba(131,24,67,.15);
+  backdrop-filter:blur(10px)
+}
+.heart{font-size:58px;animation:bob 2.8s ease-in-out infinite}
+.counter{font-size:.85rem;font-weight:800;color:#be185d;opacity:.65;margin-bottom:20px}
+.reason{min-height:150px;display:flex;align-items:center;justify-content:center;font-size:clamp(1.4rem,5vw,2rem);line-height:1.35;font-weight:800}
+.dots{margin:12px 0 26px}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#f9a8d4;margin:0 3px;transition:.25s}
+.dot.active{background:#ec4899;transform:scale(1.5)}
+button{
+  border:0;cursor:pointer;min-height:52px;padding:14px 25px;border-radius:999px;
+  font-size:1rem;font-weight:800;font-family:inherit
+}
+.main{background:#ec4899;color:white;box-shadow:0 10px 24px rgba(236,72,153,.28)}
+.main:hover{background:#db2777}
+.restart{background:transparent;color:#be185d;margin-top:10px}
+.final{margin-top:18px}
+.hidden{display:none}
+.pop{animation:pop .35s ease}
+.final-title{font-size:1.8rem;margin:5px 0 12px}
+.final-text{font-size:1.15rem;line-height:1.7}
+.footer{font-size:.75rem;opacity:.4;margin-top:20px}
+@keyframes pop{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes float{0%{transform:translateY(105vh) rotate(0)}100%{transform:translateY(-15vh) rotate(180deg)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="bg-heart" style="left:8%;animation-delay:-1s">♡</div>
+<div class="bg-heart" style="left:27%;animation-delay:-4s">♥</div>
+<div class="bg-heart" style="left:52%;animation-delay:-2s">♡</div>
+<div class="bg-heart" style="left:78%;animation-delay:-5s">♥</div>
+<div class="bg-heart" style="left:92%;animation-delay:-3s">♡</div>
+
+<main class="app">
+  <div class="heart">💗</div>
+  <div class="subtitle">A tiny website for someone special</div>
+  <h1 class="h1">Reasons I Love You</h1>
+  <p>Tap the button. I have a few things to tell you. ❤️</p>
+
+  <section class="card">
+    <div class="counter" id="counter">Reason 1 of 12</div>
+    <div class="reason pop" id="reason" aria-live="polite"></div>
+    <div class="dots" id="dots" aria-hidden="true"></div>
+    <button class="main" id="next">Show me another ❤️</button>
+    <br>
+    <button class="restart hidden" id="restart">Start again</button>
+  </section>
+
+  <section class="card final hidden pop" id="final">
+    <div style="font-size:52px">🥹❤️</div>
+    <h2 class="final-title">And the real reason?</h2>
+    <p class="final-text">
+      Because you're you.<br>
+      <strong>And somehow, you're my favourite person in the whole world.</strong>
+    </p>
+    <div style="font-size:32px">∞ ❤️ ∞</div>
+  </section>
+
+  <div class="footer">Made with way too much love.</div>
+</main>
+
+<script>
+const reasons = [
+  "Because you somehow make even the most ordinary conversations feel special.",
+  "Because you match my energy in the most chaotic and perfect way.",
+  "Because talking to you never feels like something I have to force.",
+  "Because you can make me smile without even trying.",
+  "Because I love the little things about you that you probably don't even notice.",
+  "Because somehow, you became one of the first people I want to tell everything to.",
+  "Because youre shy and a little psychotic ._. .",
+  "Because I can be completely myself around you.",
+  "Because you make me feel happy even with the shortest eye contact (a but too short sadly).",
+  "Because every memory with you somehow becomes one I want to keep.",
+  "Because you're genuinely special to me, in a way I can't properly explain.",
+  "Because after all these reasons, I still feel like I haven't said enough."
+];
+
+let current = 0;
+const reasonEl = document.getElementById("reason");
+const counterEl = document.getElementById("counter");
+const nextBtn = document.getElementById("next");
+const restartBtn = document.getElementById("restart");
+const finalEl = document.getElementById("final");
+const dotsEl = document.getElementById("dots");
+
+reasons.forEach((_, i) => {
+  const dot = document.createElement("span");
+  dot.className = "dot";
+  dotsEl.appendChild(dot);
+});
+
+function render() {
+  reasonEl.classList.remove("pop");
+  void reasonEl.offsetWidth;
+  reasonEl.classList.add("pop");
+
+  reasonEl.textContent = reasons[current];
+  counterEl.textContent = `Reason ${current + 1} of ${reasons.length}`;
+
+  [...dotsEl.children].forEach((dot, i) => {
+    dot.classList.toggle("active", i === current);
+  });
+
+  nextBtn.textContent =
+    current === reasons.length - 1 ? "One last thing… ❤️" : "Show me another ❤️";
+}
+
+nextBtn.addEventListener("click", () => {
+  if (current < reasons.length - 1) {
+    current++;
+    render();
+  } else {
+    nextBtn.classList.add("hidden");
+    finalEl.classList.remove("hidden");
+    restartBtn.classList.remove("hidden");
+    finalEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+});
+
+restartBtn.addEventListener("click", () => {
+  current = 0;
+  finalEl.classList.add("hidden");
+  nextBtn.classList.remove("hidden");
+  restartBtn.classList.add("hidden");
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
